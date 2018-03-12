@@ -4,7 +4,7 @@ import com.ulyssesss.feignconsumer.service.RefactorHelloService;
 import com.ulyssesss.helloserviceapi.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +20,16 @@ public class FeignConsumerController {
         return refactorHelloService.hello(p1, p2);
     }
 
-    @RequestMapping("user")
+    @GetMapping("user")
     public User user() {
         System.out.println("feign consumer get user");
         return refactorHelloService.user();
     }
+
+    @PostMapping("post")
+    public String post() {
+        System.out.println("feign consumer post");
+        return refactorHelloService.post();
+    }
+
 }

@@ -2,6 +2,7 @@ package com.ulyssesss.helloserviceapi.service;
 
 import com.ulyssesss.helloserviceapi.dto.User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface HelloService {
@@ -11,4 +12,7 @@ public interface HelloService {
 
     @GetMapping("user")
     User user();
+
+    @PostMapping("post")
+    String post();
 }
