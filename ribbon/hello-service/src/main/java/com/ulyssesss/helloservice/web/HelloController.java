@@ -19,7 +19,7 @@ public class HelloController {
     }
 
     @PostMapping("user")
-    public String user(@RequestBody User user) throws InterruptedException {
+    public String user(@RequestBody User user) {
         System.out.println("post user");
         return user.toString();
     }
