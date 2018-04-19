@@ -13,12 +13,12 @@ public class ConsumerController {
     @Autowired
     RestTemplate restTemplate;
 
-    private static final String HELLO_SERVICE = "HTTP://hello-service/";
+    private static final String HELLO_SERVICE = "http://hello-service/";
 
     @GetMapping("hello")
     public String hello() {
         // return restTemplate.getForObject(HELLO_SERVICE + "hello", String.class);
-        return restTemplate.getForEntity(HELLO_SERVICE + "/hello", String.class).getBody();
+        return restTemplate.getForEntity(HELLO_SERVICE + "hello", String.class).getBody();
     }
 
     @GetMapping("user")

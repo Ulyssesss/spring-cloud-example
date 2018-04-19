@@ -12,12 +12,12 @@ public class HelloService {
     @Autowired
     RestTemplate restTemplate;
 
-    private static final String HELLO_SERVICE = "HTTP://hello-service/";
+    private static final String HELLO_SERVICE = "http://hello-service/";
 
     @HystrixCommand(fallbackMethod = "helloFallback", ignoreExceptions = {NotFallbackException.class}
             , groupKey = "hello", commandKey = "str", threadPoolKey = "helloStr")
     public String hello(String p1, String p2) {
-        return restTemplate.getForObject(HELLO_SERVICE + "hello?p1={1}&p2={2}", String.class, p1, p2);
+        return restTemplate.getForObject(HELLO_SERVICE + "hello", String.class, p1, p2);
     }
 
     private String helloFallback(String p1, String p2, Throwable e) {

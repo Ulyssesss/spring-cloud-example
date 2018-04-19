@@ -1,207 +1,41 @@
-# spring-cloud-ribbon
+---
+title: Spring Cloud Ribbon 客户端负载均衡
+date: 2018-03-21 16:09:44
+tags:
+- Spring Cloud
+categories:
+- Tech
+---
 
+Spring Cloud Ribbon 是基于 Netflix Ribbon 实现的客户端负载均衡工具。
 
+Spring Cloud Ribbon 在单独使用时，可以通过在客户端中配置 ribbonServerList 来指定服务实例列表，通过轮训访问的方式起到负载均衡的作用。
 
-## eureka-server
-
-### 1.添加 eureka 服务端依赖
-
-```xml
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-eureka-server</artifactId>
-</dependency>	
-```
-
-
-
-### 2.`@EnableEurekaServer`
-
-```java
-package com.ulyssesss.eurekaserver;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
-
-@EnableEurekaServer
-@SpringBootApplication
-public class EurekaServerApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(EurekaServerApplication.class, args);
-    }
-}
-```
-
-
-
-### 3.配置 `application.properties`
-
-```properties
-server.port=8761
-spring.application.name=eureka-server
-eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
-
-# 关闭自我保护
-eureka.server.enable-self-preservation=false
-
-# 不向注册中间检索服务
-eureka.client.fetch-registry=false
-
-# 不向注册中心注册自己
-eureka.client.register-with-eureka=false
-```
+在与 Eureka 联合使用时，ribbonServerList 会被重写，改为通过 Eureka 服务注册中心获取服务实例列表，可以通过简单的几行配置完成 Spring Cloud 中服务调用的负载均衡。
 
 
 
 
 
-## hello-service
+<!-- more -->
 
-### 1.添加 eureka 客户端和 web 依赖
+## 负载均衡实践
+
+在实践客户端负载均衡之前，首先构建并启动 eureka-server，作为服务注册中心。
+
+然后创建 hello-service 作为服务提供方，启动两个实例，分别注册到 eureka-server。
+
+完成以上步骤之后开始构建具有负载均衡功能的服务消费方 ribbon-consumer。
+
+
+
+### 1.添加相关依赖
 
 ```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-eureka</artifactId>
 </dependency>
-
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-</dependency>
-```
-
-
-
-### 2.`@EnableDiscoveryClient`
-
-```java
-package com.ulyssesss.helloservice;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-
-@EnableDiscoveryClient
-@SpringBootApplication
-public class HelloServiceApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(HelloServiceApplication.class, args);
-	}
-}
-```
-
-
-
-### 3. 创建 rest controller 和 相关模型
-
-```java
-package com.ulyssesss.helloservice.web;
-
-import com.ulyssesss.helloservice.domain.User;
-import org.springframework.web.bind.annotation.*;
-
-@RestController
-public class HelloController {
-
-    @GetMapping("hello")
-    public String hello() {
-        System.out.println("get hello");
-        return "hello, world";
-    }
-
-    @GetMapping("user")
-    public User user(@RequestParam int id, @RequestParam java.lang.String name) {
-        System.out.println("get user");
-        return new User(id, name);
-    }
-
-    @PostMapping("user")
-    public String user(@RequestBody User user) {
-        System.out.println("post user");
-        return user.toString();
-    }
-}
-```
-
-```java
-package com.ulyssesss.helloservice.domain;
-
-public class User {
-
-    private int id;
-    private String name;
-
-    public User() {}
-
-    public User(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-}
-```
-
-
-
-### 4.配置 `application.properties`
-
-```properties
-spring.application.name=hello-service
-eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
-
-# 实例一
-server.port=8081
-
-# 实例二
-#server.port=8082
-```
-
-
-
-
-
-## ribbon-consumer
-
-### 1.添加依赖
-
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-eureka</artifactId>
-</dependency>
-
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-ribbon</artifactId>
@@ -210,7 +44,7 @@ server.port=8081
 
 
 
-### 2.启用服务发现客户端 `@EnableDiscoveryClient` ，声明负载均衡 `@LoadBalanced` 的 restTemplate
+### 2.启用服务发现客户端，声明负载均衡的 restTemplate
 
 ```java
 package com.ulyssesss.ribbonconsumer;
@@ -240,7 +74,16 @@ public class RibbonConsumerApplication {
 
 
 
-### 3.编写服务调用的 controller 和相关模型
+### 3. 添加配置注册到服务中心
+
+```properties
+spring.application.name=ribbon-consumer
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+```
+
+
+
+### 4.编写 Controller 向 hello-service 发起请求
 
 ```java
 package com.ulyssesss.ribbonconsumer.web;
@@ -280,57 +123,10 @@ public class ConsumerController {
 }
 ```
 
-```java
-package com.ulyssesss.ribbonconsumer.domain;
 
-public class User {
 
-    private int id;
-    private String name;
-
-    public User() {}
-
-    public User(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-}
-```
+在启动 eureka-server、两个 hello-service 实例和 ribbon-consumer 后，多次访问 http://localhost:8080/hello ，可以观察到 ribbon-consumer 通过负载均衡的 restTemplate 轮训地向两个 hello-service 发起请求。
 
 
 
-### 4.配置 `application.properties`
-
-```properties
-spring.application.name=ribbon-consumer
-eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
-```
-
-
-
-
-
+[示例代码](https://github.com/Ulyssesss/spring-cloud-example)

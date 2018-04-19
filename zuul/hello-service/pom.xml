@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ulyssesss</groupId>
-    <artifactId>ribbon-consumer</artifactId>
+    <artifactId>hello-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>ribbon-consumer</name>
+    <name>hello-service</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
@@ -31,13 +31,14 @@
             <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-ribbon</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ulyssesss</groupId>
+            <artifactId>hello-servive-api</artifactId>
+            <version>0.0.1</version>
         </dependency>
     </dependencies>
 
