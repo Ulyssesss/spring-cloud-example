@@ -30,7 +30,7 @@ public class AccessFilter extends ZuulFilter {
         HttpServletRequest request = ctx.getRequest();
         String token = request.getParameter("token");
         if (token == null) {
-            ctx.setSendZuulResponse(false);
+            ctx.setSendZuulResponse(false);//过滤请求，不对其进行路由
             ctx.setResponseBody("error token");
             ctx.setResponseStatusCode(401);
         }
