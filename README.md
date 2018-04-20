@@ -14,3 +14,5 @@
 
 [Spring Cloud Zuul 网关（一）](http://blog.ulyssesss.com/2018/04/17/Spring-Cloud-Zuul-%E7%BD%91%E5%85%B3%EF%BC%88%E4%B8%80%EF%BC%89/)
 
+[Spring Cloud Zuul 网关（二）](http://blog.ulyssesss.com/2018/04/20/Spring-Cloud-Zuul-%E7%BD%91%E5%85%B3%EF%BC%88%E4%BA%8C%EF%BC%89/)
+
