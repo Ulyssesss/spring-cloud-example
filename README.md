@@ -16,3 +16,5 @@
 
 [Spring Cloud Zuul 网关（二）](http://blog.ulyssesss.com/2018/04/20/Spring-Cloud-Zuul-%E7%BD%91%E5%85%B3%EF%BC%88%E4%BA%8C%EF%BC%89/)
 
+[Spring Cloud Config 配置中心](http://blog.ulyssesss.com/2018/04/23/Spring-Cloud-Config-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/)
+
