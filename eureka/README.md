@@ -143,4 +143,4 @@ eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
 
 
 
-[示例代码](https://github.com/Ulyssesss/spring-cloud-example)
+[示例代码](https://github.com/Ulyssesss/spring-cloud-example) 欢迎 Star 

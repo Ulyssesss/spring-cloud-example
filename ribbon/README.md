@@ -129,4 +129,4 @@ public class ConsumerController {
 
 
 
-[示例代码](https://github.com/Ulyssesss/spring-cloud-example)
+[示例代码](https://github.com/Ulyssesss/spring-cloud-example) 欢迎 Star 
